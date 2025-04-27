@@ -503,7 +503,7 @@ footer {
   100% { transform: scale(1.05); }
 }
 .about-section {
-  background-image: url('https://www.kapwing.com/explore/spider-man-triple-meme-template');
+  background-image: url('img/spiderman.jpeg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
