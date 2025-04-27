@@ -330,7 +330,7 @@ section {
 
 .most-visited-section {
   background-color: #1C1B2A;
-  background-image: url('img/explore.jpeg'); 
+  background-image: url('img/explore.jpg'); 
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -503,7 +503,7 @@ footer {
   100% { transform: scale(1.05); }
 }
 .about-section {
-  background-image: url('img/spiderman.jpeg');
+  background-image: url('img/spiderman.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
