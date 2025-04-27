@@ -503,7 +503,7 @@ footer {
   100% { transform: scale(1.05); }
 }
 .about-section {
-  background-image: url('img/spiderman.jpeg');
+  background-image: url('img/spiderman.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
