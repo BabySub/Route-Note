@@ -98,7 +98,7 @@ function redirectAfterLogin(email) {
   if (email === "ssuwebapp@gmail.com") {
     showCustomToast("🎉 Welcome Admin!", "admin.html");
   } else {
-    showCustomToast("✅ Login successful!", "journal.html");
+    showCustomToast("✅ Login successful!", "track.html");
   }
 }
 
