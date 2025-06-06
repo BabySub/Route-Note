@@ -173,38 +173,55 @@ function createEntryCard(docSnap, userId) {
   editBtn.innerText = "Edit";
   editBtn.setAttribute("aria-label", "Edit description");
 
-  editBtn.onclick = (e) => {
-    e.stopPropagation(); // prevent modal trigger
+ editBtn.onclick = (e) => {
+  e.stopPropagation(); // prevent modal trigger
 
-    const textarea = document.createElement("textarea");
-    textarea.value = data.description;
-    textarea.rows = 4;
-    textarea.style.width = "100%";
+  const textarea = document.createElement("textarea");
+  textarea.value = data.description;
+  textarea.rows = 4;
+  textarea.style.width = "100%";
 
-    const saveBtn = document.createElement("button");
-    saveBtn.innerText = "Save";
-    saveBtn.setAttribute("aria-label", "Save description");
-
-    saveBtn.onclick = async () => {
-      const newDesc = textarea.value.trim();
-      if (!newDesc) return alert("Description cannot be empty.");
-      try {
-        await updateDoc(doc(db, "users", userId, "locations", docId), {
-          description: newDesc,
-        });
-        desc.textContent = newDesc;
-        textarea.replaceWith(desc);
-        saveBtn.replaceWith(editBtn);
-        alert("Description updated.");
-      } catch (err) {
-        console.error("Error updating:", err);
-        alert("Failed to update.");
-      }
-    };
-
-    desc.replaceWith(textarea);
-    editBtn.replaceWith(saveBtn);
+  // 🛑 STOP MODAL WHEN CLICKING ON TEXTAREA
+  textarea.onclick = (e) => {
+    e.stopPropagation();
   };
+
+  const saveBtn = document.createElement("button");
+  saveBtn.innerText = "Save";
+  saveBtn.setAttribute("aria-label", "Save description");
+
+  saveBtn.onclick = async () => {
+  const newDesc = textarea.value.trim();
+  if (!newDesc) return alert("Description cannot be empty.");
+  try {
+    await updateDoc(doc(db, "users", userId, "locations", docId), {
+      description: newDesc,
+    });
+
+    desc.textContent = newDesc;
+    textarea.replaceWith(desc);
+    saveBtn.replaceWith(editBtn);
+    alert("Description updated.");
+
+    // 🧠 If modal is open, update modalContent too
+    if (modal.style.display === "block") {
+      const modalDesc = modalContent.querySelector("p:nth-of-type(2)");
+      if (modalDesc) {
+        modalDesc.textContent = newDesc;
+      }
+    }
+
+  } catch (err) {
+    console.error("Error updating:", err);
+    alert("Failed to update.");
+  }
+};
+
+
+  desc.replaceWith(textarea);
+  editBtn.replaceWith(saveBtn);
+};
+
 
   // 🗑️ Delete Entry
   const deleteBtn = document.createElement("button");
