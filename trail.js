@@ -26,54 +26,49 @@ const logoutBtn = document.getElementById("logoutBtn");
 import { doc, getDoc } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js";
 import { signOut } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js";
 
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    currentUserId = user.uid;
-    console.log("User photo URL:", user.photoURL); // Add this line
-    if (user.photoURL) {
-      document.getElementById("profileAvatar").src = user.photoURL;
-    } else {
-      document.getElementById("profileAvatar").src = "default-avatar.png"; // fallback
-    }
-  }
-    else {
-    window.location.href = "index.html";
-  }
-});
-
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    console.log("User photo URL:", user.photoURL); // Add this line
-    if (user.photoURL) {
-      document.getElementById("miniPhotoAvtar").src = user.photoURL;
-    } else {
-      document.getElementById("miniPhotoAvtar").src = "default-avatar.png"; // fallback
-    }
-  }
-});
-
 onAuthStateChanged(auth, async (user) => {
   if (user) {
+    currentUserId = user.uid;
+
+    // Set profile images
+    const profileAvatar = document.getElementById("profileAvatar");
+    const miniPhotoAvtar = document.getElementById("miniPhotoAvtar");
+    const photoURL = user.photoURL || "default-avatar.png";
+    if (profileAvatar) profileAvatar.src = photoURL;
+    if (miniPhotoAvtar) miniPhotoAvtar.src = photoURL;
+
+    // Fetch user details
     try {
       const userRef = doc(db, "users", user.uid);
       const userSnap = await getDoc(userRef);
       if (userSnap.exists()) {
         const data = userSnap.data();
-        nameEl.innerText = `${data.firstName} ${data.lastName}`;
-        emailEl.innerText = data.email;
+        if (nameEl) nameEl.innerText = `${data.firstName} ${data.lastName}`;
+        if (emailEl) emailEl.innerText = data.email;
       } else {
-        nameEl.innerText = "Unknown User";
-        emailEl.innerText = "";
+        if (nameEl) nameEl.innerText = "Unknown User";
+        if (emailEl) emailEl.innerText = "";
       }
     } catch (err) {
       console.error("Error fetching user data:", err);
-      nameEl.innerText = "Error";
-      emailEl.innerText = "";
+      if (nameEl) nameEl.innerText = "Error";
+      if (emailEl) emailEl.innerText = "";
     }
+
+    // Load and render locations
+    try {
+      const locations = await loadLocationsForUser(user.uid);
+      drawPolylineFromLocations(locations);
+    } catch (err) {
+      console.error("Failed to load locations:", err);
+      alert("Could not load saved locations.");
+    }
+
   } else {
-    window.location.href = "index.html"; // Redirect if not logged in
+    window.location.href = "index.html";
   }
 });
+
 
 logoutBtn.addEventListener("click", (e) => {
   e.preventDefault();
